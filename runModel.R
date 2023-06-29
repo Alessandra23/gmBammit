@@ -13,7 +13,7 @@ wheat.X |> dim()
 M <- wheat.X
 
 # Method 1: using the package AGHmatrix
-#G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
+G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
 
 # Second method
 N <- nrow(M)
@@ -40,7 +40,7 @@ G2 <- WWG(M = M, p = p)
 
 # Normalize the genotypic data
 # genotype_norm <- scale(M, center = TRUE, scale = TRUE)
-# # Compute the VanRaden genomic relationship matrix
+# # # Compute the VanRaden genomic relationship matrix
 # G3 <- tcrossprod(genotype_norm) / ncol(genotype_norm)
 
 
@@ -189,7 +189,7 @@ qplot(Y,modelRun$BUGSoutput$median$mu) +
 
 # -------------------------------------------------------------------------
 
-# considering fill cov matrix
+# considering full cov matrix
 
 modelCode <- "
     model{
