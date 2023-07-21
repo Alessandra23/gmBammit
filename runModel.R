@@ -4,7 +4,7 @@ library(dplyr)
 library(R2jags)
 library(ggplot2)
 
-remove(list = c())
+remove(list = ls())
 
 # getting the genomic relationship matrix (2 methods)
 
@@ -13,7 +13,7 @@ wheat.X |> dim()
 M <- wheat.X
 
 # Method 1: using the package AGHmatrix
-G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
+# G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
 
 # Second method
 N <- nrow(M)
@@ -33,16 +33,12 @@ WWG <- function(M, p){
 
   return(list(Ga=Ga,Gd=Gd))
 }
-
-G2 <- WWG(M = M, p = p)
-
-
+G <- WWG(M = M, p = p)
 
 # Normalize the genotypic data
 # genotype_norm <- scale(M, center = TRUE, scale = TRUE)
 # # # Compute the VanRaden genomic relationship matrix
-# G3 <- tcrossprod(genotype_norm) / ncol(genotype_norm)
-
+# G <- tcrossprod(genotype_norm) / ncol(genotype_norm)
 
 # Taking G as the Cov matrix
 # bammit with just g + e + int
@@ -121,7 +117,6 @@ modelCode <- "
 # Test with a small data set first:
 Y <- wheat.Y[1:20, ]
 M <- wheat.X[1:20, ]
-G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
 
 dat <- Y |>
   as.data.frame() |>
@@ -142,7 +137,7 @@ stheta <- 1
 a <- 0.1
 b <- 0.1
 Q <- 1
-sb1 <- solve(G2$Ga)
+sb1 <- G$Ga
 
 
 # Set up the data
@@ -260,8 +255,8 @@ modelCode <- "
     }
     "
 
-Y <- wheat.Y[1:100, ]
-M <- wheat.X[1:100, ]
+Y <- wheat.Y[1:50, ]
+M <- wheat.X[1:50, ]
 #G <- AGHmatrix::Gmatrix(SNPmatrix = M, method = 'VanRaden')
 
 dat <- Y |>
@@ -285,7 +280,7 @@ b <- 0.1
 Q <- 1
 mb1 <- rep(0, B1)
 #sb1 <- solve(G2$Ga)
-sb1 <- G2$Ga
+sb1 <- G$Ga
 
 
 # Set up the data
